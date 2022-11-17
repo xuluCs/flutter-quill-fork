@@ -193,20 +193,28 @@ class _HomePageState extends State<HomePage> {
     }
     var toolbar = QuillToolbar.basic(
       controller: _controller!,
-      showAlignmentButtons: true,
       afterButtonPressed: _focusNode.requestFocus,
     );
     if (kIsWeb) {
       toolbar = QuillToolbar.basic(
         controller: _controller!,
-        showAlignmentButtons: true,
+        popupTheme: QuillPopupTheme(
+          itemHoverColor: Colors.blue.shade200,
+          itemBorderRadius: 5,
+          buttonColor: Colors.blue,
+        ),
+        iconTheme: QuillIconTheme(
+          iconSelectedColor: Colors.white,
+          iconSelectedFillColor: Colors.blue.shade200,
+          iconUnselectedColor: Colors.blue,
+          borderRadius: 5,
+        ),
         afterButtonPressed: _focusNode.requestFocus,
       );
     }
     if (_isDesktop()) {
       toolbar = QuillToolbar.basic(
         controller: _controller!,
-        showAlignmentButtons: true,
         afterButtonPressed: _focusNode.requestFocus,
       );
     }
@@ -223,16 +231,7 @@ class _HomePageState extends State<HomePage> {
               child: quillEditor,
             ),
           ),
-          kIsWeb
-              ? Expanded(
-                  child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 8,
-                  ),
-                  child: toolbar,
-                ))
-              : Container(child: toolbar)
+          Container(child: toolbar)
         ],
       ),
     );

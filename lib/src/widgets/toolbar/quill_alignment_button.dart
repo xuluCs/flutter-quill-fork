@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/documents/attribute.dart';
 import '../../models/documents/style.dart';
-import '../../models/themes/quill_icon_theme.dart';
+import '../../models/themes/quill_popup_theme.dart';
 import '../controller.dart';
 
 class QuillAlignmentButton extends StatefulWidget {
@@ -13,23 +13,19 @@ class QuillAlignmentButton extends StatefulWidget {
     required this.rawItemsMap,
     required this.controller,
     required this.onSelected,
+    this.popupTheme,
     this.iconSize = 40,
     this.fillColor,
-    this.hoverElevation = 1,
-    this.highlightElevation = 1,
-    this.iconTheme,
     this.afterButtonPressed,
     Key? key,
   }) : super(key: key);
 
   final double iconSize;
   final Color? fillColor;
-  final double hoverElevation;
-  final double highlightElevation;
   final List<PopupMenuEntry<Attribute>> Function(IconData) items;
   final Map<IconData, Attribute> rawItemsMap;
   final ValueChanged<Attribute> onSelected;
-  final QuillIconTheme? iconTheme;
+  final QuillPopupTheme? popupTheme;
   final QuillController controller;
   final VoidCallback? afterButtonPressed;
 
@@ -92,14 +88,14 @@ class _QuillAlignmentButtonState extends State<QuillAlignmentButton> {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(height: widget.iconSize * 1.81),
       child: RawMaterialButton(
-        mouseCursor: SystemMouseCursors.click,
         constraints: const BoxConstraints(),
         visualDensity: VisualDensity.compact,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(widget.iconTheme?.borderRadius ?? 2)),
         fillColor: widget.fillColor,
         elevation: 0,
-        hoverElevation: widget.hoverElevation,
-        highlightElevation: widget.hoverElevation,
+        hoverColor: widget.popupTheme?.hoverColor,
+        focusColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         onPressed: () {
           _showMenu();
           widget.afterButtonPressed?.call();
@@ -110,7 +106,6 @@ class _QuillAlignmentButtonState extends State<QuillAlignmentButton> {
   }
 
   void _showMenu() {
-    final popupMenuTheme = PopupMenuTheme.of(context);
     final button = context.findRenderObject() as RenderBox;
     final overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
     final position = RelativeRect.fromRect(
@@ -129,11 +124,10 @@ class _QuillAlignmentButtonState extends State<QuillAlignmentButton> {
     );
     showMenu<Attribute>(
       context: context,
-      elevation: 4,
-      items: widget.items(_currentValue),
       position: position,
-      shape: popupMenuTheme.shape,
-      color: popupMenuTheme.color,
+      items: widget.items(_currentValue),
+      elevation: widget.popupTheme?.elevation,
+      color: widget.popupTheme?.backgroundColor,
       constraints: BoxConstraints.tightFor(width: button.size.width),
     ).then((newValue) {
       if (!mounted) return;
@@ -147,25 +141,23 @@ class _QuillAlignmentButtonState extends State<QuillAlignmentButton> {
     });
   }
 
-  Widget _buildContent(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            _currentValue,
-            size: widget.iconSize / 1.15,
-          ),
-          const SizedBox(width: 3),
-          Icon(
-            Icons.keyboard_arrow_down_rounded,
-            size: widget.iconSize / 1.15,
-            color: widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color,
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildContent(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              _currentValue,
+              size: widget.iconSize / 1.15,
+              color: widget.popupTheme?.buttonColor,
+            ),
+            const SizedBox(width: 3),
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              size: widget.iconSize / 1.15,
+              color: widget.popupTheme?.iconButtonColor ?? widget.popupTheme?.buttonColor,
+            ),
+          ],
+        ),
+      );
 }

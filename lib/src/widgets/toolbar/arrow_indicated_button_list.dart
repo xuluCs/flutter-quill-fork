@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,18 +9,20 @@ import 'package:flutter/material.dart';
 /// The arrow indicators are automatically hidden if the list is not
 /// scrollable in the direction of the respective arrow.
 class ArrowIndicatedButtonList extends StatefulWidget {
-  const ArrowIndicatedButtonList({required this.buttons, Key? key})
-      : super(key: key);
+  const ArrowIndicatedButtonList({
+    required this.buttons,
+    this.mainAxisAlignment = MainAxisAlignment.end,
+    Key? key,
+  }) : super(key: key);
 
   final List<Widget> buttons;
+  final MainAxisAlignment mainAxisAlignment;
 
   @override
-  _ArrowIndicatedButtonListState createState() =>
-      _ArrowIndicatedButtonListState();
+  _ArrowIndicatedButtonListState createState() => _ArrowIndicatedButtonListState();
 }
 
-class _ArrowIndicatedButtonListState extends State<ArrowIndicatedButtonList>
-    with WidgetsBindingObserver {
+class _ArrowIndicatedButtonListState extends State<ArrowIndicatedButtonList> with WidgetsBindingObserver {
   final ScrollController _controller = ScrollController();
   bool _showLeftArrow = false;
   bool _showRightArrow = false;
@@ -63,10 +67,8 @@ class _ArrowIndicatedButtonListState extends State<ArrowIndicatedButtonList>
     if (!mounted) return;
 
     setState(() {
-      _showLeftArrow =
-          _controller.position.minScrollExtent != _controller.position.pixels;
-      _showRightArrow =
-          _controller.position.maxScrollExtent != _controller.position.pixels;
+      _showLeftArrow = _controller.position.minScrollExtent != _controller.position.pixels;
+      _showRightArrow = _controller.position.maxScrollExtent != _controller.position.pixels;
     });
   }
 
@@ -96,7 +98,7 @@ class _ArrowIndicatedButtonListState extends State<ArrowIndicatedButtonList>
             SliverFillRemaining(
               hasScrollBody: false,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: widget.mainAxisAlignment,
                 children: widget.buttons,
               ),
             )

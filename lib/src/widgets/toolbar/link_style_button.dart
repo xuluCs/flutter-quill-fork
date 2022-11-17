@@ -1,9 +1,10 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../models/documents/attribute.dart';
 import '../../models/rules/insert.dart';
-import '../../models/themes/quill_dialog_theme.dart';
 import '../../models/themes/quill_icon_theme.dart';
 import '../../translations/toolbar.i18n.dart';
 import '../controller.dart';
@@ -16,7 +17,6 @@ class LinkStyleButton extends StatefulWidget {
     this.iconSize = kDefaultIconSize,
     this.icon,
     this.iconTheme,
-    this.dialogTheme,
     this.afterButtonPressed,
     Key? key,
   }) : super(key: key);
@@ -25,7 +25,6 @@ class LinkStyleButton extends StatefulWidget {
   final IconData? icon;
   final double iconSize;
   final QuillIconTheme? iconTheme;
-  final QuillDialogTheme? dialogTheme;
   final VoidCallback? afterButtonPressed;
 
   @override
@@ -71,13 +70,11 @@ class _LinkStyleButtonState extends State<LinkStyleButton> {
         widget.icon ?? Icons.link,
         size: widget.iconSize,
         color: isToggled
-            ? (widget.iconTheme?.iconSelectedColor ??
-                theme.primaryIconTheme.color)
+            ? (widget.iconTheme?.iconSelectedColor ?? theme.primaryIconTheme.color)
             : (widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color),
       ),
       fillColor: isToggled
-          ? (widget.iconTheme?.iconSelectedFillColor ??
-              theme.toggleableActiveColor)
+          ? (widget.iconTheme?.iconSelectedFillColor ?? theme.toggleableActiveColor)
           : (widget.iconTheme?.iconUnselectedFillColor ?? theme.canvasColor),
       borderRadius: widget.iconTheme?.borderRadius ?? 2,
       onPressed: pressedHandler,
@@ -95,18 +92,15 @@ class _LinkStyleButtonState extends State<LinkStyleButton> {
         var text;
         if (link != null) {
           // text should be the link's corresponding text, not selection
-          final leaf =
-              widget.controller.document.querySegmentLeafNode(index).item2;
+          final leaf = widget.controller.document.querySegmentLeafNode(index).item2;
           if (leaf != null) {
             text = leaf.toPlainText();
           }
         }
 
         final len = widget.controller.selection.end - index;
-        text ??=
-            len == 0 ? '' : widget.controller.document.getPlainText(index, len);
-        return _LinkDialog(
-            dialogTheme: widget.dialogTheme, link: link, text: text);
+        text ??= len == 0 ? '' : widget.controller.document.getPlainText(index, len);
+        return _LinkDialog(link: link, text: text);
       },
     ).then(
       (value) {
@@ -116,10 +110,7 @@ class _LinkStyleButtonState extends State<LinkStyleButton> {
   }
 
   String? _getLinkAttributeValue() {
-    return widget.controller
-        .getSelectionStyle()
-        .attributes[Attribute.link.key]
-        ?.value;
+    return widget.controller.getSelectionStyle().attributes[Attribute.link.key]?.value;
   }
 
   void _linkSubmitted(dynamic value) {
@@ -144,10 +135,8 @@ class _LinkStyleButtonState extends State<LinkStyleButton> {
 }
 
 class _LinkDialog extends StatefulWidget {
-  const _LinkDialog({this.dialogTheme, this.link, this.text, Key? key})
-      : super(key: key);
+  const _LinkDialog({this.link, this.text, Key? key}) : super(key: key);
 
-  final QuillDialogTheme? dialogTheme;
   final String? link;
   final String? text;
 
@@ -173,18 +162,13 @@ class _LinkDialogState extends State<_LinkDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: widget.dialogTheme?.dialogBackgroundColor,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 8),
           TextField(
             keyboardType: TextInputType.multiline,
-            style: widget.dialogTheme?.inputTextStyle,
-            decoration: InputDecoration(
-                labelText: 'Text'.i18n,
-                labelStyle: widget.dialogTheme?.labelTextStyle,
-                floatingLabelStyle: widget.dialogTheme?.labelTextStyle),
+            decoration: InputDecoration(labelText: 'Text'.i18n),
             autofocus: true,
             onChanged: _textChanged,
             controller: _textController,
@@ -192,11 +176,7 @@ class _LinkDialogState extends State<_LinkDialog> {
           const SizedBox(height: 16),
           TextField(
             keyboardType: TextInputType.multiline,
-            style: widget.dialogTheme?.inputTextStyle,
-            decoration: InputDecoration(
-                labelText: 'Link'.i18n,
-                labelStyle: widget.dialogTheme?.labelTextStyle,
-                floatingLabelStyle: widget.dialogTheme?.labelTextStyle),
+            decoration: InputDecoration(labelText: 'Link'.i18n),
             autofocus: true,
             onChanged: _linkChanged,
             controller: _linkController,
@@ -206,10 +186,7 @@ class _LinkDialogState extends State<_LinkDialog> {
       actions: [
         TextButton(
           onPressed: _canPress() ? _applyLink : null,
-          child: Text(
-            'Ok'.i18n,
-            style: widget.dialogTheme?.labelTextStyle,
-          ),
+          child: Text('Ok'.i18n),
         ),
       ],
     );
