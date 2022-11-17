@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -42,9 +44,7 @@ class Line extends Container<Leaf?> {
     if (parent!.isLast) {
       return null;
     }
-    return parent!.next is Block
-        ? (parent!.next as Block).first as Line?
-        : parent!.next as Line?;
+    return parent!.next is Block ? (parent!.next as Block).first as Line? : parent!.next as Line?;
   }
 
   @override
@@ -52,9 +52,7 @@ class Line extends Container<Leaf?> {
 
   @override
   Delta toDelta() {
-    final delta = children
-        .map((child) => child.toDelta())
-        .fold(Delta(), (dynamic a, b) => a.concat(b));
+    final delta = children.map((child) => child.toDelta()).fold(Delta(), (dynamic a, b) => a.concat(b));
     var attributes = style;
     if (parent is Block) {
       final block = parent as Block;
@@ -129,17 +127,12 @@ class Line extends Container<Leaf?> {
     final isLineFormat = (index + local == thisLength) && local == 1;
 
     if (isLineFormat) {
-      assert(
-          style.values.every((attr) =>
-              attr.scope == AttributeScope.BLOCK ||
-              attr.scope == AttributeScope.IGNORE),
+      assert(style.values.every((attr) => attr.scope == AttributeScope.BLOCK || attr.scope == AttributeScope.IGNORE),
           'It is not allowed to apply inline attributes to line itself.');
       _format(style);
     } else {
       // Otherwise forward to children as it's an inline format update.
-      assert(style.values.every((attr) =>
-          attr.scope == AttributeScope.INLINE ||
-          attr.scope == AttributeScope.IGNORE));
+      assert(style.values.every((attr) => attr.scope == AttributeScope.INLINE || attr.scope == AttributeScope.IGNORE));
       assert(index + local != thisLength);
       super.retain(index, local, style);
     }
@@ -211,21 +204,15 @@ class Line extends Container<Leaf?> {
       // Ensure that we're only unwrapping the block only if we unset a single
       // block format in the `parentStyle` and there are no more block formats
       // left to unset.
-      if (blockStyle.value == null &&
-          parentStyle.containsKey(blockStyle.key) &&
-          parentStyle.length == 1) {
+      if (blockStyle.value == null && parentStyle.containsKey(blockStyle.key) && parentStyle.length == 1) {
         _unwrap();
-      } else if (!const MapEquality()
-          .equals(newStyle.getBlocksExceptHeader(), parentStyle)) {
+      } else if (!const MapEquality().equals(newStyle.getBlocksExceptHeader(), parentStyle)) {
         _unwrap();
         // Block style now can contain multiple attributes
-        if (newStyle.attributes.keys
-            .any(Attribute.exclusiveBlockKeys.contains)) {
-          parentStyle.removeWhere(
-              (key, attr) => Attribute.exclusiveBlockKeys.contains(key));
+        if (newStyle.attributes.keys.any(Attribute.exclusiveBlockKeys.contains)) {
+          parentStyle.removeWhere((key, attr) => Attribute.exclusiveBlockKeys.contains(key));
         }
-        parentStyle.removeWhere(
-            (key, attr) => newStyle?.attributes.keys.contains(key) ?? false);
+        parentStyle.removeWhere((key, attr) => newStyle?.attributes.keys.contains(key) ?? false);
         final parentStyleToMerge = Style.attr(parentStyle);
         newStyle = newStyle.mergeAll(parentStyleToMerge);
         _applyBlockStyles(newStyle);
@@ -391,8 +378,7 @@ class Line extends Container<Leaf?> {
 
   /// Returns each node segment's offset in selection
   /// with its corresponding style as a list
-  List<Tuple2<int, Style>> collectAllIndividualStyles(int offset, int len,
-      {int beg = 0}) {
+  List<Tuple2<int, Style>> collectAllIndividualStyles(int offset, int len, {int beg = 0}) {
     final local = math.min(length - offset, len);
     final result = <Tuple2<int, Style>>[];
 
@@ -417,8 +403,7 @@ class Line extends Container<Leaf?> {
 
     final remaining = len - local;
     if (remaining > 0) {
-      final rest =
-          nextLine!.collectAllIndividualStyles(0, remaining, beg: local);
+      final rest = nextLine!.collectAllIndividualStyles(0, remaining, beg: local);
       result.addAll(rest);
     }
 

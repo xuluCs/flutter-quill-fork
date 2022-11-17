@@ -1,16 +1,16 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 
 import '../../models/documents/attribute.dart';
 import '../../models/documents/style.dart';
 import '../../models/themes/quill_icon_theme.dart';
-import '../../translations/toolbar.i18n.dart';
 import '../controller.dart';
 
-class QuillFontFamilyButton extends StatefulWidget {
-  const QuillFontFamilyButton({
+class QuillAlignmentButton extends StatefulWidget {
+  const QuillAlignmentButton({
     required this.items,
     required this.rawItemsMap,
-    required this.attribute,
     required this.controller,
     required this.onSelected,
     this.iconSize = 40,
@@ -26,27 +26,35 @@ class QuillFontFamilyButton extends StatefulWidget {
   final Color? fillColor;
   final double hoverElevation;
   final double highlightElevation;
-  final List<PopupMenuEntry<String>> items;
-  final Map<String, String> rawItemsMap;
-  final ValueChanged<String> onSelected;
+  final List<PopupMenuEntry<Attribute>> Function(IconData) items;
+  final Map<IconData, Attribute> rawItemsMap;
+  final ValueChanged<Attribute> onSelected;
   final QuillIconTheme? iconTheme;
-  final Attribute attribute;
   final QuillController controller;
   final VoidCallback? afterButtonPressed;
 
   @override
-  _QuillFontFamilyButtonState createState() => _QuillFontFamilyButtonState();
+  _QuillAlignmentButtonState createState() => _QuillAlignmentButtonState();
 }
 
-class _QuillFontFamilyButtonState extends State<QuillFontFamilyButton> {
-  late String _defaultDisplayText;
-  late String _currentValue;
+class _QuillAlignmentButtonState extends State<QuillAlignmentButton> {
+  late IconData _currentValue;
   Style get _selectionStyle => widget.controller.getSelectionStyle();
+
+  Attribute<dynamic> _getAlignmentValue() {
+    final attr = widget.controller.toolbarButtonToggler[Attribute.align.key];
+    if (attr != null) {
+      // checkbox tapping causes controller.selection to go to offset 0
+      widget.controller.toolbarButtonToggler.remove(Attribute.align.key);
+      return attr;
+    }
+    return _selectionStyle.attributes[Attribute.align.key] ?? Attribute.align;
+  }
 
   @override
   void initState() {
     super.initState();
-    _currentValue = _defaultDisplayText = 'Font'.i18n;
+    _currentValue = _getKeyName(_getAlignmentValue());
     widget.controller.addListener(_didChangeEditingValue);
   }
 
@@ -57,7 +65,7 @@ class _QuillFontFamilyButtonState extends State<QuillFontFamilyButton> {
   }
 
   @override
-  void didUpdateWidget(covariant QuillFontFamilyButton oldWidget) {
+  void didUpdateWidget(covariant QuillAlignmentButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller.removeListener(_didChangeEditingValue);
@@ -66,22 +74,17 @@ class _QuillFontFamilyButtonState extends State<QuillFontFamilyButton> {
   }
 
   void _didChangeEditingValue() {
-    final attribute = _selectionStyle.attributes[widget.attribute.key];
-    if (attribute == null) {
-      setState(() => _currentValue = _defaultDisplayText);
-      return;
-    }
-    final keyName = _getKeyName(attribute.value);
-    setState(() => _currentValue = keyName ?? _defaultDisplayText);
+    final keyName = _getKeyName(_getAlignmentValue());
+    setState(() => _currentValue = keyName);
   }
 
-  String? _getKeyName(String value) {
+  IconData _getKeyName(dynamic value) {
     for (final entry in widget.rawItemsMap.entries) {
       if (entry.value == value) {
         return entry.key;
       }
     }
-    return null;
+    return Icons.format_align_left;
   }
 
   @override
@@ -89,10 +92,10 @@ class _QuillFontFamilyButtonState extends State<QuillFontFamilyButton> {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(height: widget.iconSize * 1.81),
       child: RawMaterialButton(
+        mouseCursor: SystemMouseCursors.click,
+        constraints: const BoxConstraints(),
         visualDensity: VisualDensity.compact,
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(widget.iconTheme?.borderRadius ?? 2)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(widget.iconTheme?.borderRadius ?? 2)),
         fillColor: widget.fillColor,
         elevation: 0,
         hoverElevation: widget.hoverElevation,
@@ -109,34 +112,37 @@ class _QuillFontFamilyButtonState extends State<QuillFontFamilyButton> {
   void _showMenu() {
     final popupMenuTheme = PopupMenuTheme.of(context);
     final button = context.findRenderObject() as RenderBox;
-    final overlay =
-        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
     final position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(button.size.bottomLeft(Offset.zero),
+        button.localToGlobal(
+            button.size.topCenter(
+              Offset(
+                button.size.width / 2,
+                -(button.size.height * (widget.rawItemsMap.length + 2.5)),
+              ),
+            ),
             ancestor: overlay),
       ),
       Offset.zero & overlay.size,
     );
-    showMenu<String>(
+    showMenu<Attribute>(
       context: context,
       elevation: 4,
-      items: widget.items,
+      items: widget.items(_currentValue),
       position: position,
       shape: popupMenuTheme.shape,
       color: popupMenuTheme.color,
+      constraints: BoxConstraints.tightFor(width: button.size.width),
     ).then((newValue) {
       if (!mounted) return;
-      if (newValue == null) {
-        return;
-      }
+      if (newValue == null) return;
+
       final keyName = _getKeyName(newValue);
       setState(() {
-        _currentValue = keyName ?? _defaultDisplayText;
-        if (keyName != null) {
-          widget.onSelected(newValue);
-        }
+        _currentValue = keyName;
+        widget.onSelected(newValue);
       });
     });
   }
@@ -144,20 +150,20 @@ class _QuillFontFamilyButtonState extends State<QuillFontFamilyButton> {
   Widget _buildContent(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(_currentValue,
-              style: TextStyle(
-                  fontSize: widget.iconSize / 1.15,
-                  color: widget.iconTheme?.iconUnselectedColor ??
-                      theme.iconTheme.color)),
+          Icon(
+            _currentValue,
+            size: widget.iconSize / 1.15,
+          ),
           const SizedBox(width: 3),
-          Icon(Icons.arrow_drop_down,
-              size: widget.iconSize / 1.15,
-              color: widget.iconTheme?.iconUnselectedColor ??
-                  theme.iconTheme.color)
+          Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: widget.iconSize / 1.15,
+            color: widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color,
+          ),
         ],
       ),
     );

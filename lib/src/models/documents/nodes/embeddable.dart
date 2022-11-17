@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:convert';
 
 /// An object which can be embedded into a Quill document.
@@ -32,18 +34,11 @@ class Embeddable {
 class BlockEmbed extends Embeddable {
   const BlockEmbed(String type, String data) : super(type, data);
 
-  static const String imageType = 'image';
-  static BlockEmbed image(String imageUrl) => BlockEmbed(imageType, imageUrl);
-
-  static const String videoType = 'video';
-  static BlockEmbed video(String videoUrl) => BlockEmbed(videoType, videoUrl);
-
   static const String formulaType = 'formula';
   static BlockEmbed formula(String formula) => BlockEmbed(formulaType, formula);
 
   static const String customType = 'custom';
-  static BlockEmbed custom(CustomBlockEmbed customBlock) =>
-      BlockEmbed(customType, customBlock.toJsonString());
+  static BlockEmbed custom(CustomBlockEmbed customBlock) => BlockEmbed(customType, customBlock.toJsonString());
 }
 
 class CustomBlockEmbed extends BlockEmbed {

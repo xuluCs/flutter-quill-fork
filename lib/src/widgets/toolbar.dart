@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 
@@ -5,22 +7,13 @@ import '../models/documents/attribute.dart';
 import '../models/themes/quill_custom_button.dart';
 import '../models/themes/quill_dialog_theme.dart';
 import '../models/themes/quill_icon_theme.dart';
-import '../translations/toolbar.i18n.dart';
-import '../utils/font.dart';
 import 'controller.dart';
 import 'embeds.dart';
 import 'toolbar/arrow_indicated_button_list.dart';
-import 'toolbar/clear_format_button.dart';
 import 'toolbar/color_button.dart';
 import 'toolbar/history_button.dart';
-import 'toolbar/indent_button.dart';
-import 'toolbar/link_style_button.dart';
-import 'toolbar/quill_font_family_button.dart';
-import 'toolbar/quill_font_size_button.dart';
-import 'toolbar/quill_icon_button.dart';
-import 'toolbar/search_button.dart';
-import 'toolbar/select_alignment_button.dart';
-import 'toolbar/select_header_style_button.dart';
+import 'toolbar/quill_alignment_button.dart';
+import 'toolbar/quill_header_style_button.dart';
 import 'toolbar/toggle_check_list_button.dart';
 import 'toolbar/toggle_style_button.dart';
 
@@ -32,7 +25,6 @@ export 'toolbar/link_style_button.dart';
 export 'toolbar/quill_font_size_button.dart';
 export 'toolbar/quill_icon_button.dart';
 export 'toolbar/select_alignment_button.dart';
-export 'toolbar/select_header_style_button.dart';
 export 'toolbar/toggle_check_list_button.dart';
 export 'toolbar/toggle_style_button.dart';
 
@@ -118,52 +110,50 @@ class QuillToolbar extends StatelessWidget implements PreferredSizeWidget {
     Locale? locale,
     Key? key,
   }) {
-    final isButtonGroupShown = [
-      showFontFamily ||
-          showFontSize ||
-          showBoldButton ||
-          showItalicButton ||
-          showSmallButton ||
-          showUnderLineButton ||
-          showStrikeThrough ||
-          showInlineCode ||
-          showColorButton ||
-          showBackgroundColorButton ||
-          showClearFormat ||
-          embedButtons?.isNotEmpty == true,
-      showAlignmentButtons || showDirection,
-      showLeftAlignment,
-      showCenterAlignment,
-      showRightAlignment,
-      showJustifyAlignment,
-      showHeaderStyle,
-      showListNumbers || showListBullets || showListCheck || showCodeBlock,
-      showQuote || showIndent,
-      showLink || showSearchButton
-    ];
+    // final isButtonGroupShown = [
+    //   showFontFamily ||
+    //       showFontSize ||
+    //       showBoldButton ||
+    //       showItalicButton ||
+    //       showSmallButton ||
+    //       showUnderLineButton ||
+    //       showStrikeThrough ||
+    //       showInlineCode ||
+    //       showColorButton ||
+    //       showBackgroundColorButton ||
+    //       showClearFormat ||
+    //       embedButtons?.isNotEmpty == true,
+    //   showAlignmentButtons || showDirection,
+    //   showLeftAlignment,
+    //   showCenterAlignment,
+    //   showRightAlignment,
+    //   showJustifyAlignment,
+    //   showHeaderStyle,
+    //   showListNumbers || showListBullets || showListCheck || showCodeBlock,
+    //   showQuote || showIndent,
+    //   showLink || showSearchButton
+    // ];
 
     //default font size values
-    final fontSizes = fontSizeValues ??
-        {
-          'Small'.i18n: 'small',
-          'Large'.i18n: 'large',
-          'Huge'.i18n: 'huge',
-          'Clear'.i18n: '0'
-        };
+    // final fontSizes = fontSizeValues ?? {'Small'.i18n: 'small', 'Large'.i18n: 'large', 'Huge'.i18n: 'huge', 'Clear'.i18n: '0'};
 
-    //default font family values
-    final fontFamilies = fontFamilyValues ??
-        {
-          'Sans Serif': 'sans-serif',
-          'Serif': 'serif',
-          'Monospace': 'monospace',
-          'Ibarra Real Nova': 'ibarra-real-nova',
-          'SquarePeg': 'square-peg',
-          'Nunito': 'nunito',
-          'Pacifico': 'pacifico',
-          'Roboto Mono': 'roboto-mono',
-          'Clear': 'Clear'
-        };
+    //default header values
+    final headerValues = {
+      'Heading 1': Attribute.h1,
+      'Heading 2': Attribute.h2,
+      'Heading 3': Attribute.h3,
+      'Heading 4': Attribute.h4,
+      'Heading 5': Attribute.h5,
+      'Heading 6': Attribute.h6,
+    };
+
+    //default align values
+    final alignValues = {
+      Icons.format_align_left: Attribute.leftAlignment,
+      Icons.format_align_center: Attribute.centerAlignment,
+      Icons.format_align_justify: Attribute.justifyAlignment,
+      Icons.format_align_right: Attribute.rightAlignment,
+    };
 
     return QuillToolbar(
       key: key,
@@ -193,53 +183,6 @@ class QuillToolbar extends StatelessWidget implements PreferredSizeWidget {
             iconTheme: iconTheme,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showFontFamily)
-          QuillFontFamilyButton(
-            iconTheme: iconTheme,
-            iconSize: toolbarIconSize,
-            attribute: Attribute.font,
-            controller: controller,
-            items: [
-              for (MapEntry<String, String> fontFamily in fontFamilies.entries)
-                PopupMenuItem<String>(
-                  key: ValueKey(fontFamily.key),
-                  value: fontFamily.value,
-                  child: Text(fontFamily.key.toString(),
-                      style: TextStyle(
-                          color:
-                              fontFamily.value == 'Clear' ? Colors.red : null)),
-                ),
-            ],
-            onSelected: (newFont) {
-              controller.formatSelection(Attribute.fromKeyValue(
-                  'font', newFont == 'Clear' ? null : newFont));
-            },
-            rawItemsMap: fontFamilies,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showFontSize)
-          QuillFontSizeButton(
-            iconTheme: iconTheme,
-            iconSize: toolbarIconSize,
-            attribute: Attribute.size,
-            controller: controller,
-            items: [
-              for (MapEntry<String, String> fontSize in fontSizes.entries)
-                PopupMenuItem<String>(
-                  key: ValueKey(fontSize.key),
-                  value: fontSize.value,
-                  child: Text(fontSize.key.toString(),
-                      style: TextStyle(
-                          color: fontSize.value == '0' ? Colors.red : null)),
-                ),
-            ],
-            onSelected: (newSize) {
-              controller.formatSelection(Attribute.fromKeyValue(
-                  'size', newSize == '0' ? null : getFontSize(newSize)));
-            },
-            rawItemsMap: fontSizes,
-            afterButtonPressed: afterButtonPressed,
-          ),
         if (showBoldButton)
           ToggleStyleButton(
             attribute: Attribute.bold,
@@ -258,15 +201,6 @@ class QuillToolbar extends StatelessWidget implements PreferredSizeWidget {
             iconTheme: iconTheme,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showSmallButton)
-          ToggleStyleButton(
-            attribute: Attribute.small,
-            icon: Icons.format_size,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
         if (showUnderLineButton)
           ToggleStyleButton(
             attribute: Attribute.underline,
@@ -276,114 +210,79 @@ class QuillToolbar extends StatelessWidget implements PreferredSizeWidget {
             iconTheme: iconTheme,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showStrikeThrough)
-          ToggleStyleButton(
-            attribute: Attribute.strikeThrough,
-            icon: Icons.format_strikethrough,
+        if (showHeaderStyle)
+          QuillHeaderStyleButton(
+            iconTheme: iconTheme,
             iconSize: toolbarIconSize,
             controller: controller,
-            iconTheme: iconTheme,
+            items: (current) => [
+              for (MapEntry<String, Attribute> header in headerValues.entries)
+                PopupMenuItem<Attribute>(
+                  key: ValueKey(header.key),
+                  padding: EdgeInsets.zero,
+                  value: header.value,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      header.key.toString(),
+                      style: TextStyle(
+                        fontSize: toolbarIconSize / 1.15,
+                        color: header.key == current ? Colors.blue.shade300 : null,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+            onSelected: (level) {
+              controller.formatSelection(level);
+            },
+            rawItemsMap: headerValues,
             afterButtonPressed: afterButtonPressed,
-          ),
-        if (showInlineCode)
-          ToggleStyleButton(
-            attribute: Attribute.inlineCode,
-            icon: Icons.code,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showColorButton)
-          ColorButton(
-            icon: Icons.color_lens,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            background: false,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showBackgroundColorButton)
-          ColorButton(
-            icon: Icons.format_color_fill,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            background: true,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showClearFormat)
-          ClearFormatButton(
-            icon: Icons.format_clear,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (embedButtons != null)
-          for (final builder in embedButtons)
-            builder(controller, toolbarIconSize, iconTheme, dialogTheme),
-        if (showDividers &&
-            isButtonGroupShown[0] &&
-            (isButtonGroupShown[1] ||
-                isButtonGroupShown[2] ||
-                isButtonGroupShown[3] ||
-                isButtonGroupShown[4] ||
-                isButtonGroupShown[5]))
-          VerticalDivider(
-            indent: 12,
-            endIndent: 12,
-            color: Colors.grey.shade400,
           ),
         if (showAlignmentButtons)
-          SelectAlignmentButton(
-            controller: controller,
-            iconSize: toolbarIconSize,
+          QuillAlignmentButton(
             iconTheme: iconTheme,
-            showLeftAlignment: showLeftAlignment,
-            showCenterAlignment: showCenterAlignment,
-            showRightAlignment: showRightAlignment,
-            showJustifyAlignment: showJustifyAlignment,
+            iconSize: toolbarIconSize,
+            controller: controller,
+            items: (current) => [
+              for (MapEntry<IconData, Attribute> align in alignValues.entries)
+                PopupMenuItem<Attribute>(
+                  key: ValueKey(align.key),
+                  value: align.value,
+                  padding: EdgeInsets.zero,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      align.key,
+                      size: toolbarIconSize,
+                      color: align.key == current ? Colors.blue : null,
+                    ),
+                  ),
+                ),
+            ],
+            onSelected: (level) {
+              if (level == Attribute.leftAlignment) {
+                controller.formatSelection(Attribute.clone(Attribute.align, null));
+              } else {
+                controller.formatSelection(level);
+              }
+            },
+            rawItemsMap: alignValues,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showDirection)
-          ToggleStyleButton(
-            attribute: Attribute.rtl,
-            controller: controller,
-            icon: Icons.format_textdirection_r_to_l,
-            iconSize: toolbarIconSize,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showDividers &&
-            isButtonGroupShown[1] &&
-            (isButtonGroupShown[2] ||
-                isButtonGroupShown[3] ||
-                isButtonGroupShown[4] ||
-                isButtonGroupShown[5]))
-          VerticalDivider(
-            indent: 12,
-            endIndent: 12,
-            color: Colors.grey.shade400,
-          ),
-        if (showHeaderStyle)
-          SelectHeaderStyleButton(
-            controller: controller,
-            iconSize: toolbarIconSize,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showDividers &&
-            showHeaderStyle &&
-            isButtonGroupShown[2] &&
-            (isButtonGroupShown[3] ||
-                isButtonGroupShown[4] ||
-                isButtonGroupShown[5]))
-          VerticalDivider(
-            indent: 12,
-            endIndent: 12,
-            color: Colors.grey.shade400,
-          ),
+        // if (showAlignmentButtons)
+        //   SelectAlignmentButton(
+        //     controller: controller,
+        //     iconSize: toolbarIconSize,
+        //     iconTheme: iconTheme,
+        //     showLeftAlignment: showLeftAlignment,
+        //     showCenterAlignment: showCenterAlignment,
+        //     showRightAlignment: showRightAlignment,
+        //     showJustifyAlignment: showJustifyAlignment,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
         if (showListNumbers)
           ToggleStyleButton(
             attribute: Attribute.ol,
@@ -411,90 +310,192 @@ class QuillToolbar extends StatelessWidget implements PreferredSizeWidget {
             iconTheme: iconTheme,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showCodeBlock)
-          ToggleStyleButton(
-            attribute: Attribute.codeBlock,
-            controller: controller,
-            icon: Icons.code,
+        if (showColorButton)
+          ColorButton(
+            icon: Icons.color_lens,
             iconSize: toolbarIconSize,
+            controller: controller,
+            background: false,
             iconTheme: iconTheme,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showDividers &&
-            isButtonGroupShown[3] &&
-            (isButtonGroupShown[4] || isButtonGroupShown[5]))
-          VerticalDivider(
-            indent: 12,
-            endIndent: 12,
-            color: Colors.grey.shade400,
-          ),
-        if (showQuote)
-          ToggleStyleButton(
-            attribute: Attribute.blockQuote,
-            controller: controller,
-            icon: Icons.format_quote,
+        if (showBackgroundColorButton)
+          ColorButton(
+            icon: Icons.format_color_fill,
             iconSize: toolbarIconSize,
+            controller: controller,
+            background: true,
             iconTheme: iconTheme,
             afterButtonPressed: afterButtonPressed,
           ),
-        if (showIndent)
-          IndentButton(
-            icon: Icons.format_indent_increase,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            isIncrease: true,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showIndent)
-          IndentButton(
-            icon: Icons.format_indent_decrease,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            isIncrease: false,
-            iconTheme: iconTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showDividers && isButtonGroupShown[4] && isButtonGroupShown[5])
-          VerticalDivider(
-            indent: 12,
-            endIndent: 12,
-            color: Colors.grey.shade400,
-          ),
-        if (showLink)
-          LinkStyleButton(
-            controller: controller,
-            iconSize: toolbarIconSize,
-            iconTheme: iconTheme,
-            dialogTheme: dialogTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (showSearchButton)
-          SearchButton(
-            icon: Icons.search,
-            iconSize: toolbarIconSize,
-            controller: controller,
-            iconTheme: iconTheme,
-            dialogTheme: dialogTheme,
-            afterButtonPressed: afterButtonPressed,
-          ),
-        if (customButtons.isNotEmpty)
-          if (showDividers)
-            VerticalDivider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.shade400,
-            ),
-        for (var customButton in customButtons)
-          QuillIconButton(
-            highlightElevation: 0,
-            hoverElevation: 0,
-            size: toolbarIconSize * kIconButtonFactor,
-            icon: Icon(customButton.icon, size: toolbarIconSize),
-            borderRadius: iconTheme?.borderRadius ?? 2,
-            onPressed: customButton.onTap,
-            afterPressed: afterButtonPressed,
-          ),
+
+        // if (showStrikeThrough)
+        //   ToggleStyleButton(
+        //     attribute: Attribute.strikeThrough,
+        //     icon: Icons.format_strikethrough,
+        //     iconSize: toolbarIconSize,
+        //     controller: controller,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showInlineCode)
+        //   ToggleStyleButton(
+        //     attribute: Attribute.inlineCode,
+        //     icon: Icons.code,
+        //     iconSize: toolbarIconSize,
+        //     controller: controller,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+
+        // if (showSmallButton)
+        //   ToggleStyleButton(
+        //     attribute: Attribute.small,
+        //     icon: Icons.format_size,
+        //     iconSize: toolbarIconSize,
+        //     controller: controller,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+
+        // if (showFontSize)
+        //   QuillFontSizeButton(
+        //     iconTheme: iconTheme,
+        //     iconSize: toolbarIconSize,
+        //     attribute: Attribute.size,
+        //     controller: controller,
+        //     items: (current) => [
+        //       for (MapEntry<String, String> fontSize in fontSizes.entries)
+        //         PopupMenuItem<String>(
+        //           key: ValueKey(fontSize.key),
+        //           value: fontSize.value,
+        //           child: Container(
+        //             padding: const EdgeInsets.all(8),
+        //             color: fontSize.key == current ? Colors.blue.shade300 : null,
+        //             child: Text(
+        //               fontSize.key.toString(),
+        //             ),
+        //           ),
+        //         ),
+        //     ],
+        //     onSelected: (newSize) {
+        //       controller.formatSelection(Attribute.fromKeyValue('size', newSize == '0' ? null : getFontSize(newSize)));
+        //     },
+        //     rawItemsMap: fontSizes,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        //   if (showIndent)
+        //   IndentButton(
+        //     icon: Icons.format_indent_increase,
+        //     iconSize: toolbarIconSize,
+        //     controller: controller,
+        //     isIncrease: true,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showIndent)
+        //   IndentButton(
+        //     icon: Icons.format_indent_decrease,
+        //     iconSize: toolbarIconSize,
+        //     controller: controller,
+        //     isIncrease: false,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showLink)
+        //   LinkStyleButton(
+        //     controller: controller,
+        //     iconSize: toolbarIconSize,
+        //     iconTheme: iconTheme,
+        //     dialogTheme: dialogTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showClearFormat)
+        //   ClearFormatButton(
+        //     icon: Icons.format_clear,
+        //     iconSize: toolbarIconSize,
+        //     controller: controller,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (embedButtons != null)
+        //   for (final builder in embedButtons) builder(controller, toolbarIconSize, iconTheme, dialogTheme),
+        // if (showDividers &&
+        //     isButtonGroupShown[0] &&
+        //     (isButtonGroupShown[1] || isButtonGroupShown[2] || isButtonGroupShown[3] || isButtonGroupShown[4] || isButtonGroupShown[5]))
+        //   VerticalDivider(
+        //     indent: 12,
+        //     endIndent: 12,
+        //     color: Colors.grey.shade400,
+        //   ),
+        // if (showDirection)
+        //   ToggleStyleButton(
+        //     attribute: Attribute.rtl,
+        //     controller: controller,
+        //     icon: Icons.format_textdirection_r_to_l,
+        //     iconSize: toolbarIconSize,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showDividers && isButtonGroupShown[1] && (isButtonGroupShown[2] || isButtonGroupShown[3] || isButtonGroupShown[4] || isButtonGroupShown[5]))
+        //   VerticalDivider(
+        //     indent: 12,
+        //     endIndent: 12,
+        //     color: Colors.grey.shade400,
+        //   ),
+        // if (showDividers && showHeaderStyle && isButtonGroupShown[2] && (isButtonGroupShown[3] || isButtonGroupShown[4] || isButtonGroupShown[5]))
+        //   VerticalDivider(
+        //     indent: 12,
+        //     endIndent: 12,
+        //     color: Colors.grey.shade400,
+        //   ),
+        // if (showCodeBlock)
+        //   ToggleStyleButton(
+        //     attribute: Attribute.codeBlock,
+        //     controller: controller,
+        //     icon: Icons.code,
+        //     iconSize: toolbarIconSize,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showDividers && isButtonGroupShown[3] && (isButtonGroupShown[4] || isButtonGroupShown[5]))
+        //   VerticalDivider(
+        //     indent: 12,
+        //     endIndent: 12,
+        //     color: Colors.grey.shade400,
+        //   ),
+        // if (showQuote)
+        //   ToggleStyleButton(
+        //     attribute: Attribute.blockQuote,
+        //     controller: controller,
+        //     icon: Icons.format_quote,
+        //     iconSize: toolbarIconSize,
+        //     iconTheme: iconTheme,
+        //     afterButtonPressed: afterButtonPressed,
+        //   ),
+        // if (showDividers && isButtonGroupShown[4] && isButtonGroupShown[5])
+        //   VerticalDivider(
+        //     indent: 12,
+        //     endIndent: 12,
+        //     color: Colors.grey.shade400,
+        //   ),
+        // if (customButtons.isNotEmpty)
+        //   if (showDividers)
+        //     VerticalDivider(
+        //       indent: 12,
+        //       endIndent: 12,
+        //       color: Colors.grey.shade400,
+        //     ),
+        // for (var customButton in customButtons)
+        //   QuillIconButton(
+        //     highlightElevation: 0,
+        //     hoverElevation: 0,
+        //     size: toolbarIconSize * kIconButtonFactor,
+        //     icon: Icon(customButton.icon, size: toolbarIconSize),
+        //     borderRadius: iconTheme?.borderRadius ?? 2,
+        //     onPressed: customButton.onTap,
+        //     afterPressed: afterButtonPressed,
+        //   ),
       ],
     );
   }
@@ -533,8 +534,7 @@ class QuillToolbar extends StatelessWidget implements PreferredSizeWidget {
               children: children,
             )
           : Container(
-              constraints:
-                  BoxConstraints.tightFor(height: preferredSize.height),
+              constraints: BoxConstraints.tightFor(height: preferredSize.height),
               color: color ?? Theme.of(context).canvasColor,
               child: ArrowIndicatedButtonList(buttons: children),
             ),

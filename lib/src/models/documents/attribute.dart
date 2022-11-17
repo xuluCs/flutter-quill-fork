@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:collection';
 
 import 'package:quiver/core.dart';
@@ -144,6 +146,12 @@ class Attribute<T> {
 
   static const Attribute<int?> h3 = HeaderAttribute(level: 3);
 
+  static const Attribute<int?> h4 = HeaderAttribute(level: 4);
+
+  static const Attribute<int?> h5 = HeaderAttribute(level: 5);
+
+  static const Attribute<int?> h6 = HeaderAttribute(level: 6);
+
   // "attributes":{"align":"left"}
   static const Attribute<String?> leftAlignment = AlignAttribute('left');
 
@@ -229,9 +237,7 @@ class Attribute<T> {
     if (identical(this, other)) return true;
     if (other is! Attribute) return false;
     final typedOther = other;
-    return key == typedOther.key &&
-        scope == typedOther.scope &&
-        value == typedOther.value;
+    return key == typedOther.key && scope == typedOther.scope && value == typedOther.value;
   }
 
   @override
@@ -280,29 +286,24 @@ class LinkAttribute extends Attribute<String?> {
 }
 
 class ColorAttribute extends Attribute<String?> {
-  const ColorAttribute(String? val)
-      : super('color', AttributeScope.INLINE, val);
+  const ColorAttribute(String? val) : super('color', AttributeScope.INLINE, val);
 }
 
 class BackgroundAttribute extends Attribute<String?> {
-  const BackgroundAttribute(String? val)
-      : super('background', AttributeScope.INLINE, val);
+  const BackgroundAttribute(String? val) : super('background', AttributeScope.INLINE, val);
 }
 
 /// This is custom attribute for hint
 class PlaceholderAttribute extends Attribute<bool> {
-  const PlaceholderAttribute()
-      : super('placeholder', AttributeScope.INLINE, true);
+  const PlaceholderAttribute() : super('placeholder', AttributeScope.INLINE, true);
 }
 
 class HeaderAttribute extends Attribute<int?> {
-  const HeaderAttribute({int? level})
-      : super('header', AttributeScope.BLOCK, level);
+  const HeaderAttribute({int? level}) : super('header', AttributeScope.BLOCK, level);
 }
 
 class IndentAttribute extends Attribute<int?> {
-  const IndentAttribute({int? level})
-      : super('indent', AttributeScope.BLOCK, level);
+  const IndentAttribute({int? level}) : super('indent', AttributeScope.BLOCK, level);
 }
 
 class AlignAttribute extends Attribute<String?> {
@@ -322,23 +323,19 @@ class BlockQuoteAttribute extends Attribute<bool> {
 }
 
 class DirectionAttribute extends Attribute<String?> {
-  const DirectionAttribute(String? val)
-      : super('direction', AttributeScope.BLOCK, val);
+  const DirectionAttribute(String? val) : super('direction', AttributeScope.BLOCK, val);
 }
 
 class WidthAttribute extends Attribute<String?> {
-  const WidthAttribute(String? val)
-      : super('width', AttributeScope.IGNORE, val);
+  const WidthAttribute(String? val) : super('width', AttributeScope.IGNORE, val);
 }
 
 class HeightAttribute extends Attribute<String?> {
-  const HeightAttribute(String? val)
-      : super('height', AttributeScope.IGNORE, val);
+  const HeightAttribute(String? val) : super('height', AttributeScope.IGNORE, val);
 }
 
 class StyleAttribute extends Attribute<String?> {
-  const StyleAttribute(String? val)
-      : super('style', AttributeScope.IGNORE, val);
+  const StyleAttribute(String? val) : super('style', AttributeScope.IGNORE, val);
 }
 
 class TokenAttribute extends Attribute<String> {
@@ -347,6 +344,5 @@ class TokenAttribute extends Attribute<String> {
 
 // `script` is supposed to be inline attribute but it is not supported yet
 class ScriptAttribute extends Attribute<String> {
-  const ScriptAttribute(String val)
-      : super('script', AttributeScope.IGNORE, val);
+  const ScriptAttribute(String val) : super('script', AttributeScope.IGNORE, val);
 }

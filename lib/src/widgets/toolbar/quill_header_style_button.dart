@@ -1,19 +1,15 @@
 // ignore_for_file: lines_longer_than_80_chars
-
 import 'package:flutter/material.dart';
 
 import '../../models/documents/attribute.dart';
 import '../../models/documents/style.dart';
 import '../../models/themes/quill_icon_theme.dart';
-import '../../translations/toolbar.i18n.dart';
-import '../../utils/font.dart';
 import '../controller.dart';
 
-class QuillFontSizeButton extends StatefulWidget {
-  const QuillFontSizeButton({
+class QuillHeaderStyleButton extends StatefulWidget {
+  const QuillHeaderStyleButton({
     required this.items,
     required this.rawItemsMap,
-    required this.attribute,
     required this.controller,
     required this.onSelected,
     this.iconSize = 40,
@@ -29,27 +25,37 @@ class QuillFontSizeButton extends StatefulWidget {
   final Color? fillColor;
   final double hoverElevation;
   final double highlightElevation;
-  final List<PopupMenuEntry<String>> Function(String) items;
-  final Map<String, String> rawItemsMap;
-  final ValueChanged<String> onSelected;
+  final List<PopupMenuEntry<Attribute>> Function(String) items;
+  final Map<String, Attribute> rawItemsMap;
+  final ValueChanged<Attribute> onSelected;
   final QuillIconTheme? iconTheme;
-  final Attribute attribute;
   final QuillController controller;
   final VoidCallback? afterButtonPressed;
 
   @override
-  _QuillFontSizeButtonState createState() => _QuillFontSizeButtonState();
+  _QuillHeaderStyleButtonState createState() => _QuillHeaderStyleButtonState();
 }
 
-class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
-  late String _defaultDisplayText;
+class _QuillHeaderStyleButtonState extends State<QuillHeaderStyleButton> {
   late String _currentValue;
   Style get _selectionStyle => widget.controller.getSelectionStyle();
+
+  Attribute<dynamic> _getHeaderValue() {
+    final attr = widget.controller.toolbarButtonToggler[Attribute.header.key];
+    if (attr != null) {
+      // checkbox tapping causes controller.selection to go to offset 0
+      widget.controller.toolbarButtonToggler.remove(Attribute.header.key);
+      return attr;
+    }
+    return _selectionStyle.attributes[Attribute.header.key] ?? Attribute.header;
+  }
 
   @override
   void initState() {
     super.initState();
-    _currentValue = _defaultDisplayText = 'Size'.i18n;
+    setState(() {
+      _currentValue = _getKeyName(_getHeaderValue());
+    });
     widget.controller.addListener(_didChangeEditingValue);
   }
 
@@ -60,7 +66,7 @@ class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
   }
 
   @override
-  void didUpdateWidget(covariant QuillFontSizeButton oldWidget) {
+  void didUpdateWidget(covariant QuillHeaderStyleButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller.removeListener(_didChangeEditingValue);
@@ -69,22 +75,17 @@ class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
   }
 
   void _didChangeEditingValue() {
-    final attribute = _selectionStyle.attributes[widget.attribute.key];
-    if (attribute == null) {
-      setState(() => _currentValue = _defaultDisplayText);
-      return;
-    }
-    final keyName = _getKeyName(attribute.value);
-    setState(() => _currentValue = keyName ?? _defaultDisplayText);
+    final keyName = _getKeyName(_getHeaderValue());
+    setState(() => _currentValue = keyName);
   }
 
-  String? _getKeyName(dynamic value) {
+  String _getKeyName(dynamic value) {
     for (final entry in widget.rawItemsMap.entries) {
-      if (getFontSize(entry.value) == getFontSize(value)) {
+      if (entry.value == value) {
         return entry.key;
       }
     }
-    return null;
+    return _currentValue;
   }
 
   @override
@@ -92,6 +93,7 @@ class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(height: widget.iconSize * 1.81),
       child: RawMaterialButton(
+        constraints: const BoxConstraints(),
         visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(widget.iconTheme?.borderRadius ?? 2)),
         fillColor: widget.fillColor,
@@ -114,28 +116,34 @@ class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
     final position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(button.size.bottomLeft(Offset.zero), ancestor: overlay),
+        button.localToGlobal(
+            button.size.topCenter(
+              Offset(
+                button.size.width / 2,
+                -(button.size.height * (widget.rawItemsMap.length + 4)),
+              ),
+            ),
+            ancestor: overlay),
       ),
       Offset.zero & overlay.size,
     );
-    showMenu<String>(
+    showMenu<Attribute>(
       context: context,
       elevation: 4,
       items: widget.items(_currentValue),
       position: position,
       shape: popupMenuTheme.shape,
       color: popupMenuTheme.color,
+      constraints: BoxConstraints.tightFor(width: button.size.width),
     ).then((newValue) {
       if (!mounted) return;
-      if (newValue == null) {
-        return;
-      }
+      if (newValue == null) return;
+
       final keyName = _getKeyName(newValue);
+      final _attribute = newValue == _getHeaderValue() ? Attribute.header : newValue;
       setState(() {
-        _currentValue = keyName ?? _defaultDisplayText;
-        if (keyName != null) {
-          widget.onSelected(newValue);
-        }
+        _currentValue = keyName;
+        widget.onSelected(_attribute);
       });
     });
   }
@@ -143,13 +151,22 @@ class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
   Widget _buildContent(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(_currentValue, style: TextStyle(fontSize: widget.iconSize / 1.15, color: widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color)),
+          Text(
+            _currentValue,
+            style: TextStyle(
+              fontSize: widget.iconSize / 1.15,
+            ),
+          ),
           const SizedBox(width: 3),
-          Icon(Icons.keyboard_arrow_down_rounded, size: widget.iconSize / 1.15, color: widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color)
+          Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: widget.iconSize / 1.15,
+            color: widget.iconTheme?.iconUnselectedColor ?? theme.iconTheme.color,
+          )
         ],
       ),
     );
