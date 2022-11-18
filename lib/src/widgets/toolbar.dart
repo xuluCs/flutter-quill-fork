@@ -11,6 +11,7 @@ import 'embeds.dart';
 import 'toolbar/arrow_indicated_button_list.dart';
 import 'toolbar/color_button.dart';
 import 'toolbar/history_button.dart';
+import 'toolbar/indent_button.dart';
 import 'toolbar/quill_alignment_button.dart';
 import 'toolbar/quill_header_style_button.dart';
 import 'toolbar/toggle_check_list_button.dart';
@@ -56,6 +57,7 @@ class QuillToolbar extends StatelessWidget {
     bool showColorButton = true,
     bool showBackgroundColorButton = true,
     bool showAlignmentButtons = true,
+    bool showIndentButtons = true,
     bool showHeaderButton = true,
     bool showListButton = true,
     bool multiRowsDisplay = true,
@@ -84,7 +86,6 @@ class QuillToolbar extends StatelessWidget {
     Locale? locale,
 
     /// Background toolbar color
-    Color? backgroundColor,
     Key? key,
   }) {
     //default font size values
@@ -200,6 +201,24 @@ class QuillToolbar extends StatelessWidget {
                   icon: Icons.format_strikethrough,
                   iconSize: toolbarIconSize,
                   controller: controller,
+                  iconTheme: iconTheme,
+                  afterButtonPressed: afterButtonPressed,
+                ),
+              if (showIndentButtons)
+                IndentButton(
+                  icon: Icons.format_indent_increase,
+                  iconSize: toolbarIconSize,
+                  controller: controller,
+                  isIncrease: true,
+                  iconTheme: iconTheme,
+                  afterButtonPressed: afterButtonPressed,
+                ),
+              if (showIndentButtons)
+                IndentButton(
+                  icon: Icons.format_indent_decrease,
+                  iconSize: toolbarIconSize,
+                  controller: controller,
+                  isIncrease: false,
                   iconTheme: iconTheme,
                   afterButtonPressed: afterButtonPressed,
                 ),
