@@ -106,7 +106,7 @@ class _QuillHeaderStyleButtonState extends State<QuillHeaderStyleButton> {
 
   void _showMenu() {
     final button = context.findRenderObject() as RenderBox;
-    final overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset.zero, ancestor: overlay),

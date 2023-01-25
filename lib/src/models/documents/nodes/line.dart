@@ -399,7 +399,7 @@ class Line extends Container<Leaf?> {
       }
     }
 
-    // TODO: add line style and parent's block style
+    // add line style and parent's block style
 
     final remaining = len - local;
     if (remaining > 0) {

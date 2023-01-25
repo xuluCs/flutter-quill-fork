@@ -768,7 +768,7 @@ class RenderEditableTextLine extends RenderEditableBox {
 
   double get cursorHeight => cursorCont.style.height ?? preferredLineHeight(const TextPosition(offset: 0));
 
-  // TODO: This is no longer producing the highest-fidelity caret
+  // This is no longer producing the highest-fidelity caret
   // heights for Android, especially when non-alphabetic languages
   // are involved. The current implementation overrides the height set
   // here with the full measured height of the text on Android which looks

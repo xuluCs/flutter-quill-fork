@@ -108,11 +108,10 @@ Color stringToColor(String? s, [Color? originalColor]) {
     s = s.substring(5); // trim left 'rgba('
     s = s.substring(0, s.length - 1); // trim right ')'
     final arr = s.split(',').map((e) => e.trim()).toList();
-    return Color.fromRGBO(int.parse(arr[0]), int.parse(arr[1]),
-        int.parse(arr[2]), double.parse(arr[3]));
+    return Color.fromRGBO(int.parse(arr[0]), int.parse(arr[1]), int.parse(arr[2]), double.parse(arr[3]));
   }
 
-  // TODO: take care of "color": "inherit"
+  // take care of "color": "inherit"
   if (s.startsWith('inherit')) {
     return originalColor ?? Colors.black;
   }
