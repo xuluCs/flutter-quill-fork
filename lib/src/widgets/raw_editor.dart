@@ -328,9 +328,9 @@ class RawEditorState extends EditorState
       /// the scroll view with [BaselineProxy] which mimics the editor's
       /// baseline.
       // This implies that the first line has no styles applied to it.
-      final baselinePadding = EdgeInsets.only(top: _styles!.paragraph.verticalSpacing.item1);
+      final baselinePadding = EdgeInsets.only(top: _styles!.paragraph!.verticalSpacing.item1);
       child = BaselineProxy(
-        textStyle: _styles!.paragraph.style,
+        textStyle: _styles!.paragraph!.style,
         padding: baselinePadding,
         child: QuillSingleChildScrollView(
           controller: _scrollController,
@@ -387,7 +387,6 @@ class RawEditorState extends EditorState
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.bracketRight): const IndentSelectionIntent(true),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.bracketLeft): const IndentSelectionIntent(false),
 
-          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit0): const ApplyHeaderIntent(Attribute.paragraph),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit1): const ApplyHeaderIntent(Attribute.h1),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit2): const ApplyHeaderIntent(Attribute.h2),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit3): const ApplyHeaderIntent(Attribute.h3),
@@ -657,7 +656,7 @@ class RawEditorState extends EditorState
       }
     }
 
-    return defaultStyles!.paragraph.verticalSpacing;
+    return defaultStyles!.paragraph!.verticalSpacing;
   }
 
   Tuple2<double, double> _getVerticalSpacingForBlock(Block node, DefaultStyles? defaultStyles) {

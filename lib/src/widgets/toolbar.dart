@@ -93,7 +93,6 @@ class QuillToolbar extends StatelessWidget {
 
     //default header values
     final headerValues = {
-      'Paragraph': Attribute.paragraph,
       'Heading 1': Attribute.h1,
       'Heading 2': Attribute.h2,
       'Heading 3': Attribute.h3,

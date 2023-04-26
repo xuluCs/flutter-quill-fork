@@ -63,7 +63,6 @@ class DefaultTextBlockStyle {
 class InlineCodeStyle {
   InlineCodeStyle({
     required this.style,
-    this.paragraph,
     this.header1,
     this.header2,
     this.header3,
@@ -75,9 +74,6 @@ class InlineCodeStyle {
 
   /// Base text style for an inline code.
   final TextStyle style;
-
-  /// Style override for inline code in paragraph.
-  final TextStyle? paragraph;
 
   /// Style override for inline code in header level 1.
   final TextStyle? header1;
@@ -103,9 +99,6 @@ class InlineCodeStyle {
   /// Returns effective style to use for inline code for the specified
   /// [lineStyle].
   TextStyle styleFor(Style lineStyle) {
-    if (lineStyle.containsKey(Attribute.paragraph.key)) {
-      return paragraph ?? style;
-    }
     if (lineStyle.containsKey(Attribute.h1.key)) {
       return header1 ?? style;
     }
@@ -138,7 +131,6 @@ class InlineCodeStyle {
         other.header3 == header3 &&
         other.header4 == header4 &&
         other.header5 == header5 &&
-        other.paragraph == paragraph &&
         other.backgroundColor == backgroundColor &&
         other.radius == radius;
   }
@@ -151,7 +143,6 @@ class InlineCodeStyle {
         header3,
         header4,
         header5,
-        paragraph,
         backgroundColor,
         radius,
       );
@@ -176,12 +167,12 @@ class DefaultListBlockStyle extends DefaultTextBlockStyle {
 
 class DefaultStyles {
   DefaultStyles({
-    required this.paragraph,
     this.h1,
     this.h2,
     this.h3,
     this.h4,
     this.h5,
+    this.paragraph,
     this.bold,
     this.italic,
     this.small,
@@ -207,7 +198,7 @@ class DefaultStyles {
   final DefaultTextBlockStyle? h3;
   final DefaultTextBlockStyle? h4;
   final DefaultTextBlockStyle? h5;
-  final DefaultTextBlockStyle paragraph;
+  final DefaultTextBlockStyle? paragraph;
   final TextStyle? bold;
   final TextStyle? italic;
   final TextStyle? small;
@@ -360,7 +351,7 @@ class DefaultStyles {
         h3: other.h3 ?? h3,
         h4: other.h4 ?? h4,
         h5: other.h5 ?? h5,
-        paragraph: other.paragraph,
+        paragraph: other.paragraph ?? paragraph,
         bold: other.bold ?? bold,
         italic: other.italic ?? italic,
         small: other.small ?? small,

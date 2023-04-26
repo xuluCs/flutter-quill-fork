@@ -253,7 +253,7 @@ class EditableTextBlock extends StatelessWidget {
         lineSpacing = defaultStyles!.align!.lineSpacing;
       } else {
         // use paragraph linespacing as a default
-        lineSpacing = defaultStyles!.paragraph.lineSpacing;
+        lineSpacing = defaultStyles!.paragraph!.lineSpacing;
       }
       top = lineSpacing.item1;
       bottom = lineSpacing.item2;

@@ -239,7 +239,6 @@ class _TextLineState extends State<TextLine> {
 
     final header = widget.line.style.attributes[Attribute.header.key];
     final m = <Attribute, TextStyle>{
-      Attribute.paragraph: defaultStyles.paragraph.style,
       Attribute.h1: defaultStyles.h1!.style,
       Attribute.h2: defaultStyles.h2!.style,
       Attribute.h3: defaultStyles.h3!.style,
@@ -247,7 +246,7 @@ class _TextLineState extends State<TextLine> {
       Attribute.h5: defaultStyles.h5!.style,
     };
 
-    textStyle = textStyle.merge(m[header] ?? defaultStyles.paragraph.style);
+    textStyle = textStyle.merge(m[header] ?? defaultStyles.paragraph!.style);
 
     // Only retrieve exclusive block format for the line style purpose
     Attribute? block;
