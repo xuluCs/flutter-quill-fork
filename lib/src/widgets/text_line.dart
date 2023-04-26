@@ -244,7 +244,6 @@ class _TextLineState extends State<TextLine> {
       Attribute.h3: defaultStyles.h3!.style,
       Attribute.h4: defaultStyles.h4!.style,
       Attribute.h5: defaultStyles.h5!.style,
-      Attribute.h6: defaultStyles.h6!.style,
     };
 
     textStyle = textStyle.merge(m[header] ?? defaultStyles.paragraph!.style);

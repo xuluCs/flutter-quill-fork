@@ -653,8 +653,6 @@ class RawEditorState extends EditorState
           return defaultStyles!.h4!.verticalSpacing;
         case 5:
           return defaultStyles!.h5!.verticalSpacing;
-        case 6:
-          return defaultStyles!.h6!.verticalSpacing;
         default:
           throw 'Invalid level $level';
       }

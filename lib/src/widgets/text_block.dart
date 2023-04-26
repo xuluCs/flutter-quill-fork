@@ -236,10 +236,6 @@ class EditableTextBlock extends StatelessWidget {
           top = defaultStyles!.h5!.verticalSpacing.item1;
           bottom = defaultStyles.h5!.verticalSpacing.item2;
           break;
-        case 6:
-          top = defaultStyles!.h6!.verticalSpacing.item1;
-          bottom = defaultStyles.h6!.verticalSpacing.item2;
-          break;
         default:
           throw 'Invalid level $level';
       }

@@ -36,11 +36,11 @@ class QuillStyles extends InheritedWidget {
 /// paragraphs.
 class DefaultTextBlockStyle {
   DefaultTextBlockStyle(
-    this.style,
-    this.verticalSpacing,
-    this.lineSpacing,
+    this.style, {
+    this.verticalSpacing = const Tuple2(0, 0),
+    this.lineSpacing = const Tuple2(0, 0),
     this.decoration,
-  );
+  });
 
   /// Base text style for a text block.
   final TextStyle style;
@@ -154,7 +154,12 @@ class DefaultListBlockStyle extends DefaultTextBlockStyle {
     Tuple2<double, double> lineSpacing,
     BoxDecoration? decoration,
     this.checkboxUIBuilder,
-  ) : super(style, verticalSpacing, lineSpacing, decoration);
+  ) : super(
+          style,
+          verticalSpacing: verticalSpacing,
+          lineSpacing: lineSpacing,
+          decoration: decoration,
+        );
 
   final QuillCheckboxBuilder? checkboxUIBuilder;
 }
@@ -166,7 +171,6 @@ class DefaultStyles {
     this.h3,
     this.h4,
     this.h5,
-    this.h6,
     this.paragraph,
     this.bold,
     this.italic,
@@ -193,7 +197,6 @@ class DefaultStyles {
   final DefaultTextBlockStyle? h3;
   final DefaultTextBlockStyle? h4;
   final DefaultTextBlockStyle? h5;
-  final DefaultTextBlockStyle? h6;
   final DefaultTextBlockStyle? paragraph;
   final TextStyle? bold;
   final TextStyle? italic;
@@ -240,66 +243,46 @@ class DefaultStyles {
 
     return DefaultStyles(
         h1: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 96,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              fontWeight: FontWeight.w300,
-              decoration: TextDecoration.none,
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 96,
+            color: defaultTextStyle.style.color,
+            fontWeight: FontWeight.w300,
+            decoration: TextDecoration.none,
+          ),
+        ),
         h2: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 60,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              fontWeight: FontWeight.w300,
-              decoration: TextDecoration.none,
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 60,
+            color: defaultTextStyle.style.color,
+            fontWeight: FontWeight.w300,
+            decoration: TextDecoration.none,
+          ),
+        ),
         h3: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 48,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 48,
+            color: defaultTextStyle.style.color,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+          ),
+        ),
         h4: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 34,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 34,
+            color: defaultTextStyle.style.color,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+          ),
+        ),
         h5: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 24,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
-        h6: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 20,
-              color: defaultTextStyle.style.color!.withOpacity(0.70),
-              fontWeight: FontWeight.w500,
-              decoration: TextDecoration.none,
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
-        paragraph: DefaultTextBlockStyle(baseStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 24,
+            color: defaultTextStyle.style.color,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+          ),
+        ),
+        paragraph: DefaultTextBlockStyle(baseStyle),
         bold: const TextStyle(fontWeight: FontWeight.bold),
         italic: const TextStyle(fontStyle: FontStyle.italic),
         small: const TextStyle(fontSize: 12),
@@ -314,27 +297,23 @@ class DefaultStyles {
           header3: inlineCodeStyle.copyWith(fontSize: 48),
           header4: inlineCodeStyle.copyWith(fontSize: 34),
           header5: inlineCodeStyle.copyWith(fontSize: 24),
-          header6: inlineCodeStyle.copyWith(fontSize: 20),
         ),
         link: TextStyle(
           color: themeData.colorScheme.secondary,
           decoration: TextDecoration.underline,
         ),
         placeHolder: DefaultTextBlockStyle(
-            defaultTextStyle.style.copyWith(
-              fontSize: 20,
-              height: 1.5,
-              color: Colors.grey.withOpacity(0.6),
-            ),
-            const Tuple2(0, 0),
-            const Tuple2(0, 0),
-            null),
+          defaultTextStyle.style.copyWith(
+            fontSize: 20,
+            height: 1.5,
+            color: Colors.grey.withOpacity(0.6),
+          ),
+        ),
         lists: DefaultListBlockStyle(baseStyle, baseSpacing, const Tuple2(0, 6), null, null),
-        quote: DefaultTextBlockStyle(
-            TextStyle(color: baseStyle.color!.withOpacity(0.6)),
-            baseSpacing,
-            const Tuple2(6, 2),
-            BoxDecoration(
+        quote: DefaultTextBlockStyle(TextStyle(color: baseStyle.color!.withOpacity(0.6)),
+            verticalSpacing: baseSpacing,
+            lineSpacing: const Tuple2(6, 2),
+            decoration: BoxDecoration(
               border: Border(
                 left: BorderSide(width: 4, color: Colors.grey.shade300),
               ),
@@ -346,15 +325,18 @@ class DefaultStyles {
               fontSize: 13,
               height: 1.15,
             ),
-            baseSpacing,
-            const Tuple2(0, 0),
-            BoxDecoration(
+            verticalSpacing: baseSpacing,
+            decoration: BoxDecoration(
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(2),
             )),
-        indent: DefaultTextBlockStyle(baseStyle, baseSpacing, const Tuple2(0, 6), null),
-        align: DefaultTextBlockStyle(baseStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
-        leading: DefaultTextBlockStyle(baseStyle, const Tuple2(0, 0), const Tuple2(0, 0), null),
+        indent: DefaultTextBlockStyle(
+          baseStyle,
+          verticalSpacing: baseSpacing,
+          lineSpacing: const Tuple2(0, 6),
+        ),
+        align: DefaultTextBlockStyle(baseStyle),
+        leading: DefaultTextBlockStyle(baseStyle),
         sizeSmall: const TextStyle(fontSize: 10),
         sizeLarge: const TextStyle(fontSize: 18),
         sizeHuge: const TextStyle(fontSize: 22));
@@ -367,7 +349,6 @@ class DefaultStyles {
         h3: other.h3 ?? h3,
         h4: other.h4 ?? h4,
         h5: other.h5 ?? h5,
-        h6: other.h6 ?? h6,
         paragraph: other.paragraph ?? paragraph,
         bold: other.bold ?? bold,
         italic: other.italic ?? italic,
