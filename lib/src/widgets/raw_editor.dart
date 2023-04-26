@@ -328,9 +328,9 @@ class RawEditorState extends EditorState
       /// the scroll view with [BaselineProxy] which mimics the editor's
       /// baseline.
       // This implies that the first line has no styles applied to it.
-      final baselinePadding = EdgeInsets.only(top: _styles!.paragraph!.verticalSpacing.item1);
+      final baselinePadding = EdgeInsets.only(top: _styles!.paragraph.verticalSpacing.item1);
       child = BaselineProxy(
-        textStyle: _styles!.paragraph!.style,
+        textStyle: _styles!.paragraph.style,
         padding: baselinePadding,
         child: QuillSingleChildScrollView(
           controller: _scrollController,
@@ -657,7 +657,7 @@ class RawEditorState extends EditorState
       }
     }
 
-    return defaultStyles!.paragraph!.verticalSpacing;
+    return defaultStyles!.paragraph.verticalSpacing;
   }
 
   Tuple2<double, double> _getVerticalSpacingForBlock(Block node, DefaultStyles? defaultStyles) {

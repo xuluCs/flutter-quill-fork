@@ -176,12 +176,12 @@ class DefaultListBlockStyle extends DefaultTextBlockStyle {
 
 class DefaultStyles {
   DefaultStyles({
+    required this.paragraph,
     this.h1,
     this.h2,
     this.h3,
     this.h4,
     this.h5,
-    this.paragraph,
     this.bold,
     this.italic,
     this.small,
@@ -207,7 +207,7 @@ class DefaultStyles {
   final DefaultTextBlockStyle? h3;
   final DefaultTextBlockStyle? h4;
   final DefaultTextBlockStyle? h5;
-  final DefaultTextBlockStyle? paragraph;
+  final DefaultTextBlockStyle paragraph;
   final TextStyle? bold;
   final TextStyle? italic;
   final TextStyle? small;
@@ -360,7 +360,7 @@ class DefaultStyles {
         h3: other.h3 ?? h3,
         h4: other.h4 ?? h4,
         h5: other.h5 ?? h5,
-        paragraph: other.paragraph ?? paragraph,
+        paragraph: other.paragraph,
         bold: other.bold ?? bold,
         italic: other.italic ?? italic,
         small: other.small ?? small,
