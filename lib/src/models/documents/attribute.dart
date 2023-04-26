@@ -70,7 +70,7 @@ class Attribute<T> {
 
   static const PlaceholderAttribute placeholder = PlaceholderAttribute();
 
-  static const HeaderAttribute header = HeaderAttribute();
+  static const HeaderAttribute header = HeaderAttribute(level: 3);
 
   static const IndentAttribute indent = IndentAttribute();
 
@@ -139,8 +139,6 @@ class Attribute<T> {
     Attribute.codeBlock.key,
     Attribute.blockQuote.key,
   });
-
-  static const Attribute<int?> paragraph = HeaderAttribute(level: 0);
 
   static const Attribute<int?> h1 = HeaderAttribute(level: 1);
 
