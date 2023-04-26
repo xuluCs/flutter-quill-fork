@@ -239,6 +239,7 @@ class _TextLineState extends State<TextLine> {
 
     final header = widget.line.style.attributes[Attribute.header.key];
     final m = <Attribute, TextStyle>{
+      Attribute.paragraph: defaultStyles.paragraph!.style,
       Attribute.h1: defaultStyles.h1!.style,
       Attribute.h2: defaultStyles.h2!.style,
       Attribute.h3: defaultStyles.h3!.style,

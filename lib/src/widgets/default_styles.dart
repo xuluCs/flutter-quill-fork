@@ -63,18 +63,21 @@ class DefaultTextBlockStyle {
 class InlineCodeStyle {
   InlineCodeStyle({
     required this.style,
+    this.paragraph,
     this.header1,
     this.header2,
     this.header3,
     this.header4,
     this.header5,
-    this.header6,
     this.backgroundColor,
     this.radius,
   });
 
   /// Base text style for an inline code.
   final TextStyle style;
+
+  /// Style override for inline code in paragraph.
+  final TextStyle? paragraph;
 
   /// Style override for inline code in header level 1.
   final TextStyle? header1;
@@ -91,9 +94,6 @@ class InlineCodeStyle {
   /// Style override for inline code in headings level 5.
   final TextStyle? header5;
 
-  /// Style override for inline code in headings level 6.
-  final TextStyle? header6;
-
   /// Background color for inline code.
   final Color? backgroundColor;
 
@@ -103,6 +103,9 @@ class InlineCodeStyle {
   /// Returns effective style to use for inline code for the specified
   /// [lineStyle].
   TextStyle styleFor(Style lineStyle) {
+    if (lineStyle.containsKey(Attribute.paragraph.key)) {
+      return paragraph ?? style;
+    }
     if (lineStyle.containsKey(Attribute.h1.key)) {
       return header1 ?? style;
     }
@@ -117,9 +120,6 @@ class InlineCodeStyle {
     }
     if (lineStyle.containsKey(Attribute.h5.key)) {
       return header5 ?? style;
-    }
-    if (lineStyle.containsKey(Attribute.h6.key)) {
-      return header6 ?? style;
     }
     return style;
   }
@@ -138,13 +138,23 @@ class InlineCodeStyle {
         other.header3 == header3 &&
         other.header4 == header4 &&
         other.header5 == header5 &&
-        other.header6 == header6 &&
+        other.paragraph == paragraph &&
         other.backgroundColor == backgroundColor &&
         other.radius == radius;
   }
 
   @override
-  int get hashCode => Object.hash(style, header1, header2, header3, header4, header5, header6, backgroundColor, radius);
+  int get hashCode => Object.hash(
+        style,
+        header1,
+        header2,
+        header3,
+        header4,
+        header5,
+        paragraph,
+        backgroundColor,
+        radius,
+      );
 }
 
 class DefaultListBlockStyle extends DefaultTextBlockStyle {
@@ -242,104 +252,105 @@ class DefaultStyles {
     );
 
     return DefaultStyles(
-        h1: DefaultTextBlockStyle(
-          defaultTextStyle.style.copyWith(
-            fontSize: 96,
-            color: defaultTextStyle.style.color,
-            fontWeight: FontWeight.w300,
-            decoration: TextDecoration.none,
-          ),
+      h1: DefaultTextBlockStyle(
+        defaultTextStyle.style.copyWith(
+          fontSize: 96,
+          color: defaultTextStyle.style.color,
+          fontWeight: FontWeight.w300,
+          decoration: TextDecoration.none,
         ),
-        h2: DefaultTextBlockStyle(
-          defaultTextStyle.style.copyWith(
-            fontSize: 60,
-            color: defaultTextStyle.style.color,
-            fontWeight: FontWeight.w300,
-            decoration: TextDecoration.none,
-          ),
+      ),
+      h2: DefaultTextBlockStyle(
+        defaultTextStyle.style.copyWith(
+          fontSize: 60,
+          color: defaultTextStyle.style.color,
+          fontWeight: FontWeight.w300,
+          decoration: TextDecoration.none,
         ),
-        h3: DefaultTextBlockStyle(
-          defaultTextStyle.style.copyWith(
-            fontSize: 48,
-            color: defaultTextStyle.style.color,
-            fontWeight: FontWeight.normal,
-            decoration: TextDecoration.none,
-          ),
+      ),
+      h3: DefaultTextBlockStyle(
+        defaultTextStyle.style.copyWith(
+          fontSize: 48,
+          color: defaultTextStyle.style.color,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none,
         ),
-        h4: DefaultTextBlockStyle(
-          defaultTextStyle.style.copyWith(
-            fontSize: 34,
-            color: defaultTextStyle.style.color,
-            fontWeight: FontWeight.normal,
-            decoration: TextDecoration.none,
-          ),
+      ),
+      h4: DefaultTextBlockStyle(
+        defaultTextStyle.style.copyWith(
+          fontSize: 34,
+          color: defaultTextStyle.style.color,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none,
         ),
-        h5: DefaultTextBlockStyle(
-          defaultTextStyle.style.copyWith(
-            fontSize: 24,
-            color: defaultTextStyle.style.color,
-            fontWeight: FontWeight.normal,
-            decoration: TextDecoration.none,
-          ),
+      ),
+      h5: DefaultTextBlockStyle(
+        defaultTextStyle.style.copyWith(
+          fontSize: 24,
+          color: defaultTextStyle.style.color,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none,
         ),
-        paragraph: DefaultTextBlockStyle(baseStyle),
-        bold: const TextStyle(fontWeight: FontWeight.bold),
-        italic: const TextStyle(fontStyle: FontStyle.italic),
-        small: const TextStyle(fontSize: 12),
-        underline: const TextStyle(decoration: TextDecoration.underline),
-        strikeThrough: const TextStyle(decoration: TextDecoration.lineThrough),
-        inlineCode: InlineCodeStyle(
-          backgroundColor: Colors.grey.shade100,
-          radius: const Radius.circular(3),
-          style: inlineCodeStyle,
-          header1: inlineCodeStyle.copyWith(fontSize: 96),
-          header2: inlineCodeStyle.copyWith(fontSize: 60),
-          header3: inlineCodeStyle.copyWith(fontSize: 48),
-          header4: inlineCodeStyle.copyWith(fontSize: 34),
-          header5: inlineCodeStyle.copyWith(fontSize: 24),
+      ),
+      paragraph: DefaultTextBlockStyle(baseStyle),
+      bold: const TextStyle(fontWeight: FontWeight.bold),
+      italic: const TextStyle(fontStyle: FontStyle.italic),
+      small: const TextStyle(fontSize: 12),
+      underline: const TextStyle(decoration: TextDecoration.underline),
+      strikeThrough: const TextStyle(decoration: TextDecoration.lineThrough),
+      inlineCode: InlineCodeStyle(
+        backgroundColor: Colors.grey.shade100,
+        radius: const Radius.circular(3),
+        style: inlineCodeStyle,
+        header1: inlineCodeStyle.copyWith(fontSize: 96),
+        header2: inlineCodeStyle.copyWith(fontSize: 60),
+        header3: inlineCodeStyle.copyWith(fontSize: 48),
+        header4: inlineCodeStyle.copyWith(fontSize: 34),
+        header5: inlineCodeStyle.copyWith(fontSize: 24),
+      ),
+      link: TextStyle(
+        color: themeData.colorScheme.secondary,
+        decoration: TextDecoration.underline,
+      ),
+      placeHolder: DefaultTextBlockStyle(
+        defaultTextStyle.style.copyWith(
+          fontSize: 20,
+          height: 1.5,
+          color: Colors.grey.withOpacity(0.6),
         ),
-        link: TextStyle(
-          color: themeData.colorScheme.secondary,
-          decoration: TextDecoration.underline,
-        ),
-        placeHolder: DefaultTextBlockStyle(
-          defaultTextStyle.style.copyWith(
-            fontSize: 20,
-            height: 1.5,
-            color: Colors.grey.withOpacity(0.6),
-          ),
-        ),
-        lists: DefaultListBlockStyle(baseStyle, baseSpacing, const Tuple2(0, 6), null, null),
-        quote: DefaultTextBlockStyle(TextStyle(color: baseStyle.color!.withOpacity(0.6)),
-            verticalSpacing: baseSpacing,
-            lineSpacing: const Tuple2(6, 2),
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(width: 4, color: Colors.grey.shade300),
-              ),
-            )),
-        code: DefaultTextBlockStyle(
-            TextStyle(
-              color: Colors.blue.shade900.withOpacity(0.9),
-              fontFamily: fontFamily,
-              fontSize: 13,
-              height: 1.15,
-            ),
-            verticalSpacing: baseSpacing,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(2),
-            )),
-        indent: DefaultTextBlockStyle(
-          baseStyle,
+      ),
+      lists: DefaultListBlockStyle(baseStyle, baseSpacing, const Tuple2(0, 6), null, null),
+      quote: DefaultTextBlockStyle(TextStyle(color: baseStyle.color!.withOpacity(0.6)),
           verticalSpacing: baseSpacing,
-          lineSpacing: const Tuple2(0, 6),
-        ),
-        align: DefaultTextBlockStyle(baseStyle),
-        leading: DefaultTextBlockStyle(baseStyle),
-        sizeSmall: const TextStyle(fontSize: 10),
-        sizeLarge: const TextStyle(fontSize: 18),
-        sizeHuge: const TextStyle(fontSize: 22));
+          lineSpacing: const Tuple2(6, 2),
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(width: 4, color: Colors.grey.shade300),
+            ),
+          )),
+      code: DefaultTextBlockStyle(
+          TextStyle(
+            color: Colors.blue.shade900.withOpacity(0.9),
+            fontFamily: fontFamily,
+            fontSize: 13,
+            height: 1.15,
+          ),
+          verticalSpacing: baseSpacing,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(2),
+          )),
+      indent: DefaultTextBlockStyle(
+        baseStyle,
+        verticalSpacing: baseSpacing,
+        lineSpacing: const Tuple2(0, 6),
+      ),
+      align: DefaultTextBlockStyle(baseStyle),
+      leading: DefaultTextBlockStyle(baseStyle),
+      sizeSmall: const TextStyle(fontSize: 10),
+      sizeLarge: const TextStyle(fontSize: 18),
+      sizeHuge: const TextStyle(fontSize: 22),
+    );
   }
 
   DefaultStyles merge(DefaultStyles other) {

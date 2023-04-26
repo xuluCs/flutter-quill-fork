@@ -387,13 +387,12 @@ class RawEditorState extends EditorState
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.bracketRight): const IndentSelectionIntent(true),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.bracketLeft): const IndentSelectionIntent(false),
 
+          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit0): const ApplyHeaderIntent(Attribute.paragraph),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit1): const ApplyHeaderIntent(Attribute.h1),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit2): const ApplyHeaderIntent(Attribute.h2),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit3): const ApplyHeaderIntent(Attribute.h3),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit4): const ApplyHeaderIntent(Attribute.h4),
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit5): const ApplyHeaderIntent(Attribute.h5),
-          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit6): const ApplyHeaderIntent(Attribute.h6),
-          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.digit0): const ApplyHeaderIntent(Attribute.header),
 
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.shift, LogicalKeyboardKey.keyL): const ApplyCheckListIntent(),
         },
