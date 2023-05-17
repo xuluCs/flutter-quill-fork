@@ -88,6 +88,10 @@ class _QuillAlignmentButtonState extends State<QuillAlignmentButton> {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(height: widget.iconSize * 1.81),
       child: RawMaterialButton(
+        focusNode: FocusNode(
+          canRequestFocus: false,
+          descendantsAreFocusable: false,
+        ),
         constraints: const BoxConstraints(),
         visualDensity: VisualDensity.compact,
         fillColor: widget.fillColor,

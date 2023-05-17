@@ -87,6 +87,10 @@ class _QuillHeaderStyleButtonState extends State<QuillHeaderStyleButton> {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(height: widget.iconSize * 2),
       child: RawMaterialButton(
+        focusNode: FocusNode(
+          canRequestFocus: false,
+          descendantsAreFocusable: false,
+        ),
         constraints: const BoxConstraints(),
         visualDensity: VisualDensity.compact,
         fillColor: widget.fillColor,

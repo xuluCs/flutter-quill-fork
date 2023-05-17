@@ -88,6 +88,10 @@ class _DemoScaffoldState extends State<DemoScaffold> {
         centerTitle: false,
         titleSpacing: 0,
         leading: IconButton(
+          focusNode: FocusNode(
+            canRequestFocus: false,
+            descendantsAreFocusable: false,
+          ),
           icon: Icon(
             Icons.chevron_left,
             color: Colors.grey.shade800,

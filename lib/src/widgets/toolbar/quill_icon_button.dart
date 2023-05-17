@@ -27,9 +27,12 @@ class QuillIconButton extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(width: size, height: size),
       child: RawMaterialButton(
+        focusNode: FocusNode(
+          canRequestFocus: false,
+          descendantsAreFocusable: false,
+        ),
         visualDensity: VisualDensity.compact,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
         fillColor: fillColor,
         elevation: 0,
         hoverElevation: hoverElevation,

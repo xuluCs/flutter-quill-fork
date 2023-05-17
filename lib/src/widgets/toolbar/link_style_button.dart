@@ -185,6 +185,10 @@ class _LinkDialogState extends State<_LinkDialog> {
       ),
       actions: [
         TextButton(
+          focusNode: FocusNode(
+            canRequestFocus: false,
+            descendantsAreFocusable: false,
+          ),
           onPressed: _canPress() ? _applyLink : null,
           child: Text('Ok'.i18n),
         ),

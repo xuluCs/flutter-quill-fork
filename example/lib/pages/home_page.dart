@@ -78,6 +78,10 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
+            focusNode: FocusNode(
+              canRequestFocus: false,
+              descendantsAreFocusable: false,
+            ),
             onPressed: () => _addEditNote(context),
             icon: const Icon(Icons.note_add),
           ),
@@ -297,6 +301,10 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text('${isEditing ? 'Edit' : 'Add'} note'),
             IconButton(
+              focusNode: FocusNode(
+                canRequestFocus: false,
+                descendantsAreFocusable: false,
+              ),
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.close),
             )

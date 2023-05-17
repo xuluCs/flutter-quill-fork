@@ -92,6 +92,10 @@ class _QuillFontSizeButtonState extends State<QuillFontSizeButton> {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(height: widget.iconSize * 1.81),
       child: RawMaterialButton(
+        focusNode: FocusNode(
+          canRequestFocus: false,
+          descendantsAreFocusable: false,
+        ),
         visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(widget.iconTheme?.borderRadius ?? 2)),
         fillColor: widget.fillColor,
