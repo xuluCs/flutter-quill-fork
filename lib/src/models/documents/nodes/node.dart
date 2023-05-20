@@ -16,7 +16,7 @@ import 'line.dart';
 ///
 /// The current parent node is exposed by the [parent] property. A node is
 /// considered [mounted] when the [parent] property is not `null`.
-abstract class Node extends LinkedListEntry<Node> {
+abstract base class Node extends LinkedListEntry<Node> {
   /// Current parent of this node. May be null if this node is not mounted.
   Container? parent;
 
@@ -123,7 +123,7 @@ abstract class Node extends LinkedListEntry<Node> {
 }
 
 /// Root node of document tree.
-class Root extends Container<Container<Node?>> {
+base class Root extends Container<Container<Node?>> {
   @override
   Node newInstance() => Root();
 
@@ -131,7 +131,5 @@ class Root extends Container<Container<Node?>> {
   Container<Node?> get defaultChild => Line();
 
   @override
-  Delta toDelta() => children
-      .map((child) => child.toDelta())
-      .fold(Delta(), (a, b) => a.concat(b));
+  Delta toDelta() => children.map((child) => child.toDelta()).fold(Delta(), (a, b) => a.concat(b));
 }

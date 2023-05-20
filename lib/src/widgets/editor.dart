@@ -1525,7 +1525,7 @@ class RenderEditor extends RenderEditableContainerBox with RelayoutWhenSystemFon
   }
 }
 
-class QuillVerticalCaretMovementRun extends Iterator<TextPosition> {
+class QuillVerticalCaretMovementRun implements Iterator<TextPosition> {
   QuillVerticalCaretMovementRun._(
     this._editor,
     this._currentTextPosition,
@@ -1536,9 +1536,7 @@ class QuillVerticalCaretMovementRun extends Iterator<TextPosition> {
   final RenderEditor _editor;
 
   @override
-  TextPosition get current {
-    return _currentTextPosition;
-  }
+  TextPosition get current => _currentTextPosition;
 
   @override
   bool moveNext() {

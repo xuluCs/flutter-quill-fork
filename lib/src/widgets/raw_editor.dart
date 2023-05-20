@@ -1301,6 +1301,9 @@ class RawEditorState extends EditorState
 
   @override
   void performSelector(String selectorName) {}
+
+  @override
+  void insertContent(KeyboardInsertedContent content) {}
 }
 
 class _Editor extends MultiChildRenderObjectWidget {
