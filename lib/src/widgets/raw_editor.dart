@@ -1300,14 +1300,27 @@ class RawEditorState extends EditorState
   void didChangeInputControl(TextInputControl? oldControl, TextInputControl? newControl) {}
 
   @override
-  void performSelector(String selectorName) {}
+  void performSelector(String selectorName) {
+    final intent = intentForMacOSSelector(selectorName);
+
+    if (intent != null) {
+      final primaryContext = primaryFocus?.context;
+      if (primaryContext != null) {
+        Actions.invoke(primaryContext, intent);
+      }
+    }
+  }
 
   @override
   void insertContent(KeyboardInsertedContent content) {}
+
+  @override
+  // TODO: implement liveTextInputEnabled
+  bool get liveTextInputEnabled => false;
 }
 
 class _Editor extends MultiChildRenderObjectWidget {
-  _Editor({
+  const _Editor({
     required Key key,
     required List<Widget> children,
     required this.document,
