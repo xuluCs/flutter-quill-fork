@@ -155,7 +155,7 @@ class QuillEditor extends StatefulWidget {
       required this.autoFocus,
       required this.readOnly,
       required this.expands,
-      required this.disableClipboard,
+      // required this.disableClipboard,
       this.showCursor,
       this.paintCursorAboveText,
       this.placeholder,
@@ -203,7 +203,7 @@ class QuillEditor extends StatefulWidget {
       autoFocus: true,
       readOnly: readOnly,
       expands: false,
-      disableClipboard: false,
+      // disableClipboard: false,
       padding: EdgeInsets.zero,
       keyboardAppearance: keyboardAppearance ?? Brightness.light,
       locale: locale,
@@ -234,7 +234,7 @@ class QuillEditor extends StatefulWidget {
   final bool scrollable;
   final double scrollBottomInset;
 
-  final bool disableClipboard;
+  // final bool disableClipboard;
 
   /// Additional space around the content of this editor.
   final EdgeInsetsGeometry padding;
@@ -486,7 +486,7 @@ class QuillEditorState extends State<QuillEditor>
       customStyles: widget.customStyles,
       expands: widget.expands,
       autoFocus: widget.autoFocus,
-      disableClipboard: widget.disableClipboard,
+      // disableClipboard: widget.disableClipboard,
       selectionColor: selectionColor,
       selectionCtrls: widget.textSelectionControls ?? textSelectionControls,
       keyboardAppearance: widget.keyboardAppearance,

@@ -52,7 +52,7 @@ class RawEditor extends StatefulWidget {
       required this.embedBuilder,
       Key? key,
       this.scrollable = true,
-      this.disableClipboard = false,
+      // this.disableClipboard = false,
       this.padding = EdgeInsets.zero,
       this.readOnly = false,
       this.placeholder,
@@ -269,7 +269,7 @@ class RawEditorState extends EditorState
   // Focus
   bool _didAutoFocus = false;
 
-  bool? disableClipboard;
+  // bool? disableClipboard;
 
   bool get _hasFocus => widget.focusNode.hasFocus;
 
@@ -285,7 +285,9 @@ class RawEditorState extends EditorState
   String get pastePlainText => _pastePlainText;
   String _pastePlainText = '';
 
-  final ClipboardStatusNotifier _clipboardStatus = ClipboardStatusNotifier();
+  final ClipboardStatusNotifier _clipboardStatus = ClipboardStatusNotifier(
+    value: ClipboardStatus.pasteable,
+  );
   final LayerLink _toolbarLayerLink = LayerLink();
   final LayerLink _startHandleLayerLink = LayerLink();
   final LayerLink _endHandleLayerLink = LayerLink();
@@ -828,7 +830,7 @@ class RawEditorState extends EditorState
       FocusScope.of(context).autofocus(widget.focusNode);
       _didAutoFocus = true;
     }
-    disableClipboard ?? disableClipboard;
+    // disableClipboard ?? disableClipboard;
   }
 
   @override
@@ -1182,6 +1184,7 @@ class RawEditorState extends EditorState
   /// Paste text from [Clipboard].
   @override
   Future<void> pasteText(SelectionChangedCause cause) async {
+    // disableClipboard ?? disableClipboard;
     if (widget.readOnly) {
       return;
     }
