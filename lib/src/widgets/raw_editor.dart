@@ -95,7 +95,7 @@ class RawEditor extends StatefulWidget {
   final bool scrollable;
   final double scrollBottomInset;
 
-  final bool disableClipboard;
+  // final bool disableClipboard;
 
   /// Additional space around the editor contents.
   final EdgeInsetsGeometry padding;
