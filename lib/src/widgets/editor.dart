@@ -486,6 +486,7 @@ class QuillEditorState extends State<QuillEditor>
       customStyles: widget.customStyles,
       expands: widget.expands,
       autoFocus: widget.autoFocus,
+      disableClipboard: widget.disableClipboard,
       selectionColor: selectionColor,
       selectionCtrls: widget.textSelectionControls ?? textSelectionControls,
       keyboardAppearance: widget.keyboardAppearance,
