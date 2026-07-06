@@ -16,7 +16,7 @@ dependencies:
   i18n_extension: ^9.0.0
   collection: ^1.17.1
   flutter_colorpicker: ^1.0.3
-  flutter_keyboard_visibility: ^5.2.0
+  flutter_keyboard_visibility: ^6.0.0
   quiver: ^3.1.0
   tuple: ^2.0.0
   url_launcher: ^6.1.2
